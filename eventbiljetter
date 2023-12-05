@@ -1,0 +1,115 @@
+< !DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Biljettbokning</title>
+  </head>
+
+  <body>
+    <header>
+      <h1>Biljettbokning</h1>
+    </header>
+    <main>
+      <section id="buy-ticket-section">
+        <h2>Köp biljett</h2>
+        <label for="eventName">Eventnamn:</label>
+        <input type="text" id="eventName">
+        <label for="price">Pris:</label>
+        <input type="number" id="price">
+        <label for="eventTime">Tid för eventet:</label>
+        <input type="datetime-local" id="eventTime">
+        <button onclick="buyTicket()">Köp biljett</button>
+      </section>
+
+      <section id="user-section" style="display:none;">
+        <h2>Användarinformation</h2>
+        <label for="username">Användarnamn:</label>
+        <input type="text" id="username">
+        <label for="password">Lösenord:</label>
+        <input type="password" id="password">
+        <label for="email">Email:</label>
+        <input type="email" id="email">
+        <label for="phone">Telefon:</label>
+        <input type="tel" id="phone">
+        <button onclick="registerUser()">Registrera användare</button>
+      </section>
+    </main>
+    <footer>
+      <p>&copy; 2023 Biljettbokning</p>
+    </footer>
+
+    <script src="main.js"></script>
+  </body>
+
+  </html>
+
+  let eventTickets = [];
+  let users = [];
+
+
+  function buyTicket() {
+  const eventName = document.getElementById("eventName").value;
+  const price = document.getElementById("price").value;
+  const eventTime = document.getElementById("eventTime").value;
+
+  const ticket = {
+  id: generateId(),
+  eventName,
+  price,
+  eventTime,
+  buyerId: null,
+  };
+
+  eventTickets.push(ticket);
+  saveData();
+  }
+
+
+  function registerUser() {
+  const username = document.getElementById("username").value;
+  const password = document.getElementById("password").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("phone").value;
+
+  const user = {
+  id: generateId(),
+  username,
+  password,
+  email,
+  phone,
+  };
+
+  users.push(user);
+  saveData();
+  }
+
+  // Funktion för att spara data till JSON-fil
+  function saveData() {
+  const data = {
+  eventTickets,
+  users,
+  };
+
+  localStorage.setItem("ticketBookingData", JSON.stringify(data));
+  }
+
+
+  function generateId() {
+  return '_' + Math.random().toString(36).substr(2, 9);
+  }
+
+
+  const savedData = localStorage.getItem("ticketBookingData");
+  if (savedData) {
+  const parsedData = JSON.parse(savedData);
+  eventTickets = parsedData.eventTickets || [];
+  users = parsedData.users || [];
+  }
+
+
+  if (users.length > 0) {
+  document.getElementById("user-section").style.display = "block";
+  }
